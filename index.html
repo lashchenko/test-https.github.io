@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>FACEBOOK LOGIN AND LIST PAGES</title>
+  <title>FACEBOOK LOGIN AND LIST PAGES</title>
 </head>
 <body>
 
@@ -25,24 +25,63 @@
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 
-  function listPages() {
-		FB.api('/me/accounts', function(response) {
-  		console.log(response);
+  
+  function process() {
 
-			var str = JSON.stringify(response, undefined, 2);
-			console.log(str);
+    FB.api("/me/accounts", function(accounts_response) {
+      console.log(accounts_response);
 
-			document.body.appendChild(document.createElement('pre')).innerText = str;
+      var accounts_response_str = JSON.stringify(accounts_response, undefined, 2);
+      console.log(accounts_response_str);
 
-		});
-	}
+      document.body.appendChild(document.createElement('pre')).innerText = accounts_response_str;
+
+
+      FB.api(
+        "/1021435954536322/owned_pages", 
+        {
+          "page_id": accounts_response.data[0].id,
+          // "ig_password": "parameter is needed when the page is connected with Instagram"
+          "access_token": accounts_response.data[0].access_token
+        },
+        function(owned_pages_response) {
+          console.log(owned_pages_response);
+
+          var owned_pages_response_str = JSON.stringify(owned_pages_response, undefined, 2);
+          console.log(owned_pages_response_str);
+
+          document.body.appendChild(document.createElement('pre')).innerText = owned_pages_response_str;
+        }
+      );
+
+      FB.api(
+        "/1021435954536322/client_pages", 
+        {
+          "page_id": accounts_response.data[0].id,
+          "permitted_tasks": [
+            "ADVERTISE",
+            "ANALYZE"
+          ],
+          "access_token": accounts_response.data[0].access_token
+        },
+        function(client_pages_response) {
+          console.log(client_pages_response);
+
+          var client_pages_response_str = JSON.stringify(client_pages_response, undefined, 2);
+          console.log(client_pages_response_str);
+
+          document.body.appendChild(document.createElement('pre')).innerText = client_pages_response_str;
+        }
+      );
+    });
+  }
 
 </script>
 
 
 <fb:login-button 
   scope="public_profile,email,pages_show_list"
-  onlogin="listPages();">
+  onlogin="process();">
 </fb:login-button>
 
 <h2>FACEBOOK LOGIN AND LIST PAGES</h2>
