@@ -41,7 +41,7 @@ https://developers.facebook.com/docs/javascript/examples
 		FB.api('/me/accounts', function(response) {
   		console.log(response);
 
-			var str = JSON.stringify(obj, undefined, 2);
+			var str = JSON.stringify(response, undefined, 2);
 			console.log(str);
 
 			document.body.appendChild(document.createElement('pre')).innerText = str;
