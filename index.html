@@ -39,6 +39,7 @@
 
       FB.api(
         "/1021435954536322/owned_pages", 
+        'post',
         {
           "page_id": accounts_response.data[0].id,
           // "ig_password": "parameter is needed when the page is connected with Instagram"
@@ -56,6 +57,7 @@
 
       FB.api(
         "/1021435954536322/client_pages", 
+        'post',
         {
           "page_id": accounts_response.data[0].id,
           "permitted_tasks": [
