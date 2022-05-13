@@ -1,92 +1,154 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-  <title>FACEBOOK LOGIN AND LIST PAGES</title>
+    <title>FACEBOOK LOGIN AND LIST PAGES</title>
 </head>
 <body>
 
 <script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '979523372077710',
-      cookie     : true,
-      xfbml      : true,
-      version    : 'v6.0'
-    });
-      
-    FB.AppEvents.logPageView();
-  };
 
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
+    function setCookie(cname, cvalue, exdays) {
+        const d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        let expires = "expires="+d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
 
-  
-  function process() {
-
-    FB.api("/me/accounts", function(accounts_response) {
-      console.log(accounts_response);
-
-      var accounts_response_str = JSON.stringify(accounts_response, undefined, 2);
-      console.log(accounts_response_str);
-
-      document.body.appendChild(document.createElement('pre')).innerText = accounts_response_str;
-
-
-      FB.api(
-        "/1021435954536322/owned_pages", 
-        'post',
-        {
-          "page_id": accounts_response.data[0].id,
-          // "ig_password": "parameter is needed when the page is connected with Instagram"
-          "access_token": accounts_response.data[0].access_token
-        },
-        function(owned_pages_response) {
-          console.log(owned_pages_response);
-
-          var owned_pages_response_str = JSON.stringify(owned_pages_response, undefined, 2);
-          console.log(owned_pages_response_str);
-
-          document.body.appendChild(document.createElement('pre')).innerText = owned_pages_response_str;
+    function getCookie(cname) {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for(let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
         }
-      );
+        return "";
+    }
 
-      FB.api(
-        "/1021435954536322/client_pages", 
-        'post',
-        {
-          "page_id": accounts_response.data[0].id,
-          "permitted_tasks": [
-            "ADVERTISE",
-            "ANALYZE"
-          ],
-          "access_token": accounts_response.data[0].access_token
-        },
-        function(client_pages_response) {
-          console.log(client_pages_response);
-
-          var client_pages_response_str = JSON.stringify(client_pages_response, undefined, 2);
-          console.log(client_pages_response_str);
-
-          document.body.appendChild(document.createElement('pre')).innerText = client_pages_response_str;
+    function checkCookie() {
+        let user = getCookie("username");
+        if (user != "") {
+            alert("Welcome again " + user);
+        } else {
+            user = prompt("Please enter your name:", "");
+            if (user != "" && user != null) {
+                setCookie("username", user, 365);
+            }
         }
-      );
-    });
-  }
+    }
+
+
+
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '979523372077710',
+            cookie     : true,
+            xfbml      : true,
+            version    : 'v6.0'
+        });
+
+        FB.AppEvents.logPageView();
+    };
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    function myAccounts() {
+        FB.api("/me/accounts", function(accounts_response) {
+            let accounts_response_str = JSON.stringify(accounts_response, undefined, 2);
+            console.log(`accounts response:\n${accounts_response_str}`);
+
+            // document.body.appendChild(document.createElement('pre')).innerText = accounts_response_str;
+            document.getElementById('my-accounts').appendChild(document.createElement('pre')).innerText = accounts_response_str;
+        })
+    }
+    //
+    // function process() {
+    //
+    //
+    //
+    //     FB.api("/me/accounts", function(accounts_response) {
+    //         console.log(accounts_response);
+    //
+    //         var accounts_response_str = JSON.stringify(accounts_response, undefined, 2);
+    //         console.log(accounts_response_str);
+    //
+    //         document.body.appendChild(document.createElement('pre')).innerText = accounts_response_str;
+    //
+    //
+    //         FB.api(
+    //             "/1021435954536322/owned_pages",
+    //             'post',
+    //             {
+    //                 "page_id": accounts_response.data[0].id,
+    //                 // "ig_password": "parameter is needed when the page is connected with Instagram"
+    //                 "access_token": accounts_response.data[0].access_token
+    //             },
+    //             function(owned_pages_response) {
+    //                 console.log(owned_pages_response);
+    //
+    //                 var owned_pages_response_str = JSON.stringify(owned_pages_response, undefined, 2);
+    //                 console.log(owned_pages_response_str);
+    //
+    //                 document.body.appendChild(document.createElement('pre')).innerText = owned_pages_response_str;
+    //             }
+    //         );
+    //
+    //         FB.api(
+    //             "/1021435954536322/client_pages",
+    //             'post',
+    //             {
+    //                 "page_id": accounts_response.data[0].id,
+    //                 "permitted_tasks": [
+    //                     "ADVERTISE",
+    //                     "ANALYZE"
+    //                 ],
+    //                 "access_token": accounts_response.data[0].access_token
+    //             },
+    //             function(client_pages_response) {
+    //                 console.log(client_pages_response);
+    //
+    //                 var client_pages_response_str = JSON.stringify(client_pages_response, undefined, 2);
+    //                 console.log(client_pages_response_str);
+    //
+    //                 document.body.appendChild(document.createElement('pre')).innerText = client_pages_response_str;
+    //             }
+    //         );
+    //     });
+    // }
+
+//    document.getElementById('my-business-pages').innerHTML = "..." + data;
 
 </script>
 
 
-<fb:login-button 
-  scope="public_profile,email,pages_show_list,business_management"
-  onlogin="process();">
+<fb:login-button
+        scope="public_profile,email,pages_show_list,business_management"
+        onlogin="myAccounts();">
 </fb:login-button>
 
 <h2>FACEBOOK LOGIN AND LIST PAGES</h2>
+
+<h3>My accounts</h3>
+<div id='my-accounts'></div>
+
+<h3>My business pages</h3>
+<div id='my-business-pages'></div>
+
+<h3>My ad accounts in selected page</h3>
+<div id='my-ad-accounts'></div>
+
+
 
 </body>
 </html>
